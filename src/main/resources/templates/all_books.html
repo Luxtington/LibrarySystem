@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Каталог книг</title>
+    <link rel="icon" href="/images/library-icon.png" type="image/x-icon">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+        }
+
+        h1 {
+            text-align: center;
+            color: #20C997;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+
+        .book-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .book {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .book:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .book-info {
+            flex-grow: 1;
+            font-size: 16px;
+            color: #495057;
+        }
+
+        .book-info a {
+            text-decoration: none;
+            color: inherit;
+            transition: color 0.2s;
+        }
+
+        .book-info a:hover {
+            color: #20C997;
+        }
+
+        .btns-pair {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .action-btn {
+            width: 24px;
+            height: 24px;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .action-btn:hover {
+            opacity: 1;
+        }
+
+        .delete-btn {
+            background: url('/images/basket_icon.png') no-repeat center;
+            background-size: contain;
+            border: none;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .delete-btn:hover {
+            opacity: 1;
+        }
+
+        .add-book {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .add-btn {
+            width: 50px;
+            height: 50px;
+            background-color: #20C997;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .add-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .add-btn img {
+            width: 24px;
+            height: 24px;
+            filter: brightness(0) invert(1);
+        }
+
+        .total-quantity{
+            margin-top: 10px;
+            color: rgb(133, 130, 130);
+            font-size: 13px;
+        }
+
+        .home-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: transparent;
+            border: 1px solid #20C997;
+            color: #20C997;
+            border-radius: 20px;
+            padding: 6px 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .home-btn:hover {
+            background-color: #20C997;
+            color: white;
+        }
+
+        .home-btn img {
+            width: 16px;
+            height: 16px;
+            filter: brightness(0) saturate(100%) invert(67%) sepia(48%) saturate(687%) hue-rotate(121deg) brightness(89%) contrast(89%);
+        }
+
+        .home-btn:hover img {
+            filter: brightness(0) invert(1);
+        }
+
+        .search-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        #inputTitle {
+            flex-grow: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            outline: none;
+        }
+
+        #inputTitle:focus {
+            border-color: #20C997;
+            box-shadow: 0 0 0 2px rgba(32, 201, 151, 0.2);
+        }
+
+        .submit-btn {
+            width: 46px;
+            height: 46px;
+            background-color: #f8f9fa;
+            background-image: url('/images/search_icon.png');
+            background-size: 24px;
+            background-position: center;
+            background-repeat: no-repeat;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+
+        .submit-btn:hover {
+            background-color: #1aa179;
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+<a href="/lib" class="home-btn">
+    <img src="/images/home_icon.png" alt="Главная">
+    Главная
+</a>
+
+<h1>Каталог книг</h1>
+
+<form th:method="GET" th:action="@{/lib/books/search}" th:object="${textForBookSearch}" class="search-form">
+    <input type="text" id="inputTitle" th:field="*{partOfBookTitle}" placeholder="Введите название книги, которую хотите найти">
+    <button type="submit" class="submit-btn" title="Найти"></button>
+</form>
+
+<div class="book-list">
+    <div th:each="book : ${allBooks}" class="book">
+        <a th:href="@{/lib/books/{id}(id=${book.getId()})}" class="book-info"
+           th:text="${book.getTitle() + ' - ' + book.getAuthorSurname() + ', ' + book.getYearOfProduce()}">
+        </a>
+
+        <div class="btns-pair">
+            <a th:href="@{/lib/books/update/{id}(id=${book.getId()})}">
+                <img src="/images/edit_icon.png" class="action-btn" alt="Редактировать">
+            </a>
+            <form th:method="DELETE" th:action="@{/lib/books/{id}(id = ${book.getId()})}">
+                <input type="submit" class="delete-btn" value="">
+            </form>
+        </div>
+    </div>
+</div>
+<div class="total-quantity" th:if="${booksQuantity > 0}" th:text="'Всего книг: ' + ${booksQuantity}"></div>
+
+<div class="add-book">
+    <a href="/lib/books/new" class="add-btn">
+        <img src="/images/add_icon.png" alt="Добавить книгу">
+    </a>
+</div>
+</body>
+</html>

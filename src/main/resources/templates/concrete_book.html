@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${book.getTitle()}"></title>
+    <link rel="icon" href="/images/library-icon.png" type="image/x-icon">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        h1 {
+            color: #20C997;
+            margin-bottom: 30px;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .book-details {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #20C997;
+            min-width: 150px;
+        }
+
+        .detail-value {
+            flex-grow: 1;
+            color: #495057;
+        }
+
+        .back-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 40px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .back-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .go-btn {
+            width: 24px;
+            height: 24px;
+            margin-right: 15px;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .back-section:hover .go-btn {
+            opacity: 1;
+        }
+
+        .back-text {
+            color: #495057;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .back-section:hover .back-text {
+            color: #20C997;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* New styles for form elements */
+        form {
+            margin-top: 15px;
+        }
+
+        select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: inherit;
+            color: #495057;
+            background-color: white;
+            margin-right: 10px;
+            transition: border-color 0.2s;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #20C997;
+        }
+
+        input[type="submit"] {
+            padding: 8px 20px;
+            background-color: #20C997;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: inherit;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #1aa179;
+            transform: translateY(-1px);
+        }
+
+        input[type="submit"]:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+<h1 th:text="${book.getTitle()}"></h1>
+
+<div class="book-details">
+    <div class="detail-row">
+        <div class="detail-label">Название:</div>
+        <div class="detail-value" th:text="${book.getTitle()}"></div>
+    </div>
+
+    <div class="detail-row">
+        <div class="detail-label">Автор:</div>
+        <div class="detail-value" th:text="${book.getAuthorSurname()}"></div>
+    </div>
+
+    <div class="detail-row">
+        <div class="detail-label">Год издания:</div>
+        <div class="detail-value" th:text="${book.getYearOfProduce()}"></div>
+    </div>
+
+    <div class="detail-row">
+        <div class="detail-label">Статус книги: </div>
+        <div th:if="${!book.hasOwner()}">свободна. Кому назначить?
+            <form th:method="POST" th:action="@{/lib/books/appoint/{id}(id = ${book.getId()})}">
+                <label for="person"></label>
+                <select th:object="${book}" th:field="*{owner}" id="person">
+                    <!--crutch-->
+                    <option th:each="pers : ${allPersons}" th:value="${pers.getId()}"
+                            th:text="${pers.getSurname()} + ' ' + ${pers.getName()} + ' ' + ${pers.getPatronymic()}">
+                    </option>
+                </select>
+                <input type="submit" value="Назначить!">
+            </form>
+        </div>
+        <div th:unless="${!book.hasOwner()}">
+            <p>Занята читателем <a th:href="@{/lib/persons/{id}(id=${owner.getId()})}" th:text="${owner.surname}"></a></p>
+            <form th:method="DELETE" th:action="@{/lib/books/release/{id} (id = ${book.getId()})}">
+                <input type="submit" value="Освободить книгу!">
+            </form>
+        </div>
+    </div>
+</div>
+
+<a href="/lib/books" class="back-section">
+    <img class="go-btn" src="/images/back_arrow_icon.png" alt="Назад">
+    <span class="back-text">Вернуться к списку книг</span>
+</a>
+</body>
+</html>

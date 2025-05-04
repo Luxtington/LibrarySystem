@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавить новую книгу</title>
+    <link rel="icon" href="/images/library-icon.png" type="image/x-icon">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        h1 {
+            color: #20C997;
+            margin-bottom: 30px;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #20C997;
+            box-shadow: 0 0 0 3px rgba(32, 201, 151, 0.1);
+            outline: none;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .submit-btn {
+            background-color: #20C997;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            display: block;
+            width: 100%;
+            margin-top: 30px;
+            font-weight: 600;
+        }
+
+        .submit-btn:hover {
+            background-color: #1aa179;
+            transform: translateY(-2px);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #20C997;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: #1aa179;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<h1>Добавить новую книгу</h1>
+
+<div class="form-container">
+    <form th:method="PATCH" th:action="@{/lib/books/{id}(id = ${updatedBook.getId()})}" th:object="${updatedBook}">
+        <div class="form-group">
+            <label for="inputTitle">Название книги</label>
+            <input type="text" th:field="*{title}" id="inputTitle" placeholder="Введите название книги">
+            <div class="error-message" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="inputAuthorSurname">Фамилия автора</label>
+            <input type="text" th:field="*{authorSurname}" id="inputAuthorSurname" placeholder="Введите фамилию автора">
+            <div class="error-message" th:if="${#fields.hasErrors('authorSurname')}" th:errors="*{authorSurname}"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="inputYearOfProduce">Год издания</label>
+            <input type="text" th:field="*{yearOfProduce}" id="inputYearOfProduce" placeholder="Введите год издания">
+            <div class="error-message" th:if="${#fields.hasErrors('yearOfProduce')}" th:errors="*{yearOfProduce}"></div>
+        </div>
+
+        <button type="submit" class="submit-btn">Редактировать книгу</button>
+    </form>
+</div>
+
+<a href="/lib/books" class="back-link">← Вернуться к списку книг</a>
+</body>
+</html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Читатели</title>
+    <link rel="icon" href="/images/library-icon.png" type="image/x-icon">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative; /* Добавлено для правильного позиционирования кнопки */
+        }
+
+        h1 {
+            text-align: center;
+            color: #20C997;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+
+        .user-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .user {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .user:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-info {
+            flex-grow: 1;
+            font-size: 16px;
+            color: #495057;
+        }
+
+        .user-info a {
+            text-decoration: none;
+            color: inherit;
+            transition: color 0.2s;
+        }
+
+        .user-info a:hover {
+            color: #20C997;
+        }
+
+        .btns-pair {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .action-btn {
+            width: 24px;
+            height: 24px;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .action-btn:hover {
+            opacity: 1;
+        }
+
+        .delete-btn {
+            background: url('/images/basket_icon.png') no-repeat center;
+            background-size: contain;
+            border: none;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .delete-btn:hover {
+            opacity: 1;
+        }
+
+        .add-user {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .add-btn {
+            width: 50px;
+            height: 50px;
+            background-color: #20C997;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .add-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .add-btn img {
+            width: 24px;
+            height: 24px;
+            filter: brightness(0) invert(1);
+        }
+
+        .total-quantity{
+            margin-top: 10px;
+            color: rgb(133, 130, 130);
+            font-size: 13px;
+        }
+
+        .home-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: transparent;
+            border: 1px solid #20C997;
+            color: #20C997;
+            border-radius: 20px;
+            padding: 6px 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .home-btn:hover {
+            background-color: #20C997;
+            color: white;
+        }
+
+        .home-btn img {
+            width: 16px;
+            height: 16px;
+            filter: brightness(0) saturate(100%) invert(67%) sepia(48%) saturate(687%) hue-rotate(121deg) brightness(89%) contrast(89%);
+        }
+
+        .home-btn:hover img {
+            filter: brightness(0) invert(1);
+        }
+
+        .search-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        #inputTitle {
+            flex-grow: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            outline: none;
+        }
+
+        #inputTitle:focus {
+            border-color: #20C997;
+            box-shadow: 0 0 0 2px rgba(32, 201, 151, 0.2);
+        }
+
+        .submit-btn {
+            width: 46px;
+            height: 46px;
+            background-color: #f8f9fa;
+            background-image: url('/images/search_icon.png');
+            background-size: 24px;
+            background-position: center;
+            background-repeat: no-repeat;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+
+        .submit-btn:hover {
+            background-color: #1aa179;
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+<a href="/lib" class="home-btn">
+    <img src="/images/home_icon.png" alt="Главная">
+    Главная
+</a>
+
+<h1>Список читателей</h1>
+
+<form th:method="GET" th:action="@{/lib/persons/search}" th:object="${textForPersonSearch}" class="search-form">
+    <input type="text" id="inputTitle" th:field="*{initialsPart}" placeholder="Введите инициалы читателя, которого хотите найти">
+    <button type="submit" class="submit-btn" title="Найти"></button>
+</form>
+
+<div class="user-list">
+    <div th:each="pers : ${allPersons}" class="user">
+        <a th:href="@{/lib/persons/{id}(id=${pers.getId()})}" class="user-info"
+           th:text="${pers.getSurname() + ' ' + pers.getName() + ' ' + pers.getPatronymic()}">
+        </a>
+
+        <div class="btns-pair">
+            <a th:href="@{/lib/persons/update/{id}(id=${pers.getId()})}">
+                <img src="/images/edit_icon.png" class="action-btn" alt="Редактировать">
+            </a>
+            <form th:method="DELETE" th:action="@{/lib/persons/{id}(id = ${pers.getId()})}">
+                <input type="submit" class="delete-btn" value="">
+            </form>
+        </div>
+    </div>
+</div>
+<div class="total-quantity" th:if="${personQuantity > 0}" th:text="'Читателей зарегистрировано: ' + ${personQuantity}"></div>
+
+<div class="add-user">
+    <a href="/lib/persons/new" class="add-btn">
+        <img src="/images/add_icon.png" alt="Добавить читателя">
+    </a>
+</div>
+</body>
+</html>

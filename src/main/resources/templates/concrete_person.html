@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'Читатель: ' + ${person.getSurname()} + ' ' + ${person.getName()}"></title>
+    <link rel="icon" href="/images/library-icon.png" type="image/x-icon">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        h1 {
+            color: #20C997;
+            margin-bottom: 30px;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .reader-details {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #20C997;
+            min-width: 200px;
+        }
+
+        .detail-value {
+            flex-grow: 1;
+            color: #495057;
+        }
+
+        .back-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 40px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .back-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .go-btn {
+            width: 24px;
+            height: 24px;
+            margin-right: 15px;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .back-section:hover .go-btn {
+            opacity: 1;
+        }
+
+        .back-text {
+            color: #495057;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .back-section:hover .back-text {
+            color: #20C997;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .age-value {
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+<h1 th:text="${person.getSurname()} + ' ' + ${person.getName()} + ' ' + ${person.getPatronymic()}"></h1>
+
+<div class="reader-details">
+    <div class="detail-row">
+        <div class="detail-label">Фамилия:</div>
+        <div class="detail-value" th:text="${person.getSurname()}"></div>
+    </div>
+
+    <div class="detail-row">
+        <div class="detail-label">Имя:</div>
+        <div class="detail-value" th:text="${person.getName()}"></div>
+    </div>
+
+    <div class="detail-row">
+        <div class="detail-label">Отчество:</div>
+        <div class="detail-value" th:text="${person.getPatronymic()} ?: 'Не указано'"></div>
+    </div>
+
+    <div class="detail-row">
+        <div class="detail-label">Возраст:</div>
+        <div class="detail-value">
+            <span th:text="${currYear - person.getBirthdayYear()}"></span>
+            <span> лет</span>
+        </div>
+    </div>
+
+    <div class="detail-row">
+        <div class="detail-label">Электронная почта:</div>
+        <div class="detail-value" th:text="${person.getEmail()} ?: 'Не указана'"></div>
+    </div>
+
+    <div th:if="${person.getAllBooks().size() == 0}">
+        <p>Читатель пока не взял ни одной книги</p>
+    </div>
+    <div th:unless="${person.getAllBooks().size() == 0}">
+        <div><strong>Книги читателя:</strong></div>
+        <div th:each="book : ${person.getAllBooks()}">
+            <a th:href="@{/lib/books/{id}(id=${book.getId()})}" class="book-info"
+               th:text="${book.getTitle() + ' - ' + book.getAuthorSurname() + ', ' + book.getYearOfProduce()}">
+            </a>
+        </div>
+    </div>
+</div>
+
+<a href="/lib/persons" class="back-section">
+    <img class="go-btn" src="/images/back_arrow_icon.png" alt="Назад">
+    <span class="back-text">Вернуться к списку читателей</span>
+</a>
+</body>
+</html>

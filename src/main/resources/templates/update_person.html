@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавить нового читателя</title>
+    <link rel="icon" href="/images/library-icon.png" type="image/x-icon">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        h1 {
+            color: #20C997;
+            margin-bottom: 30px;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #20C997;
+            box-shadow: 0 0 0 3px rgba(32, 201, 151, 0.1);
+            outline: none;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .submit-btn {
+            background-color: #20C997;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            display: block;
+            width: 100%;
+            margin-top: 30px;
+            font-weight: 600;
+        }
+
+        .submit-btn:hover {
+            background-color: #1aa179;
+            transform: translateY(-2px);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #20C997;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: #1aa179;
+            text-decoration: underline;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+<h1>Добавить нового читателя</h1>
+
+<div class="form-container">
+    <form th:method="PATCH" th:action="@{/lib/persons/{id}(id = ${updatedPerson.getId()})}" th:object="${updatedPerson}">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="inputSurname">Фамилия *</label>
+                <input type="text" th:field="*{surname}" id="inputSurname" placeholder="Иванов">
+                <div class="error-message" th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="inputName">Имя *</label>
+                <input type="text" th:field="*{name}" id="inputName" placeholder="Иван">
+                <div class="error-message" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="inputPatronymic">Отчество</label>
+            <input type="text" th:field="*{patronymic}" id="inputPatronymic" placeholder="Иванович">
+            <div class="error-message" th:if="${#fields.hasErrors('patronymic')}" th:errors="*{patronymic}"></div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="inputAge">Год рождения *</label>
+                <input type="text" th:field="*{birthdayYear}" id="inputAge" placeholder="1990">
+                <div class="error-message" th:if="${#fields.hasErrors('birthdayYear')}" th:errors="*{birthdayYear}"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="inputEmail">Электронная почта</label>
+                <input type="text" th:field="*{email}" id="inputEmail" placeholder="example@mail.com">
+                <div class="error-message" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+            </div>
+        </div>
+
+        <button type="submit" class="submit-btn">Редактировать читателя</button>
+    </form>
+</div>
+
+<a href="/lib/persons" class="back-link">← Вернуться к списку читателей</a>
+</body>
+</html>
