@@ -203,43 +203,71 @@
         .submit-btn:active {
             transform: translateY(0);
         }
+
+        .role{
+            display: flex;
+            flex-direction: row;
+        }
+
+        .employ{
+            background: url('/images/handshake_icon.png') no-repeat center;
+            background-size: contain;
+            border: none;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
     </style>
 </head>
 <body>
 
-<a href="/lib" class="home-btn">
+<a href="/lib/index" class="home-btn">
     <img src="/images/home_icon.png" alt="Главная">
     Главная
 </a>
 
-<h1>Список читателей</h1>
+<h1>Список пользователей</h1>
 
 <form th:method="GET" th:action="@{/lib/persons/search}" th:object="${textForPersonSearch}" class="search-form">
-    <input type="text" id="inputTitle" th:field="*{initialsPart}" placeholder="Введите инициалы читателя, которого хотите найти">
+    <input type="text" id="inputTitle" th:field="*{initialsPart}" placeholder="Введите инициалы пользователя, которого хотите найти">
     <button type="submit" class="submit-btn" title="Найти"></button>
 </form>
 
 <div class="user-list">
     <div th:each="pers : ${allPersons}" class="user">
-        <a th:href="@{/lib/persons/{id}(id=${pers.getId()})}" class="user-info"
-           th:text="${pers.getSurname() + ' ' + pers.getName() + ' ' + pers.getPatronymic()}">
-        </a>
-
-        <div class="btns-pair">
-            <a th:href="@{/lib/persons/update/{id}(id=${pers.getId()})}">
-                <img src="/images/edit_icon.png" class="action-btn" alt="Редактировать">
-            </a>
-            <form th:method="DELETE" th:action="@{/lib/persons/{id}(id = ${pers.getId()})}">
-                <input type="submit" class="delete-btn" value="">
-            </form>
+        <div class="role">
+            <div th:if="${pers.isAdmin()}"><img src="/images/star_icon.png" alt="star" style="height: 20px; width: 20px"></div>
+            <a th:if="${!pers.isAdmin()}" th:href="@{/lib/persons/{id}(id=${pers.getId()})}" class="user-info"
+               th:text="${pers.getSurname() + ' ' + pers.getName() + ' ' + pers.getPatronymic()}"></a>
+            <a th:unless="${!pers.isAdmin()}" th:text="${pers.getName()}"></a>
+            <div th:if="${!pers.isAdmin() && !pers.isLibrarian()} and ${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">
+                <form  method="POST" th:action="@{/lib/persons/change-role/{id}(id = ${pers.getId()})}">
+                    <input type="submit" class="employ" value="">
+                </form>
+            </div>
+            <div th:if="${pers.isLibrarian()}">
+                <img src="/images/book_employee.png" alt="employee" style="height: 20px; width: 20px">
+            </div>
+        </div>
+        <div th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')} and ${!pers.isAdmin()}">
+            <div class="btns-pair">
+                <a th:href="@{/lib/persons/update/{id}(id=${pers.getId()})}">
+                    <img src="/images/edit_icon.png" class="action-btn" alt="Редактировать">
+                </a>
+                <form th:method="DELETE" th:action="@{/lib/persons/{id}(id = ${pers.getId()})}">
+                    <input type="submit" class="delete-btn" value="">
+                </form>
+            </div>
         </div>
     </div>
 </div>
-<div class="total-quantity" th:if="${personQuantity > 0}" th:text="'Читателей зарегистрировано: ' + ${personQuantity}"></div>
+<div class="total-quantity" th:if="${personQuantity > 0}" th:text="'Пользователей зарегистрировано: ' + ${personQuantity}"></div>
 
-<div class="add-user">
+<div class="add-user" th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">
     <a href="/lib/persons/new" class="add-btn">
-        <img src="/images/add_icon.png" alt="Добавить читателя">
+        <img src="/images/add_icon.png" alt="Добавить пользователя">
     </a>
 </div>
 </body>

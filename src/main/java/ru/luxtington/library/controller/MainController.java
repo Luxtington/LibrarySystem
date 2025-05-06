@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/lib")
 public class MainController {
-    @GetMapping
+    @GetMapping("/index")
     public String index(){
         return "library_index";
     }

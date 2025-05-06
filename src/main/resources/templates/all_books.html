@@ -207,7 +207,7 @@
 </head>
 <body>
 
-<a href="/lib" class="home-btn">
+<a href="/lib/index" class="home-btn">
     <img src="/images/home_icon.png" alt="Главная">
     Главная
 </a>
@@ -225,7 +225,7 @@
            th:text="${book.getTitle() + ' - ' + book.getAuthorSurname() + ', ' + book.getYearOfProduce()}">
         </a>
 
-        <div class="btns-pair">
+        <div class="btns-pair" th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'') or hasAuthority(''ROLE_LIBRARIAN'')')}">
             <a th:href="@{/lib/books/update/{id}(id=${book.getId()})}">
                 <img src="/images/edit_icon.png" class="action-btn" alt="Редактировать">
             </a>
@@ -237,7 +237,7 @@
 </div>
 <div class="total-quantity" th:if="${booksQuantity > 0}" th:text="'Всего книг: ' + ${booksQuantity}"></div>
 
-<div class="add-book">
+<div class="add-book" th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'') or hasAuthority(''ROLE_LIBRARIAN'')')}">
     <a href="/lib/books/new" class="add-btn">
         <img src="/images/add_icon.png" alt="Добавить книгу">
     </a>

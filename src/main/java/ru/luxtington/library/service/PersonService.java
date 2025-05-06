@@ -3,22 +3,27 @@ package ru.luxtington.library.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.luxtington.library.model.Book;
 import ru.luxtington.library.model.Person;
+import ru.luxtington.library.model.Role;
 import ru.luxtington.library.repository.PersonRepository;
+import ru.luxtington.library.repository.RoleRepository;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Transactional(readOnly = true)
 public class PersonService {
     private final PersonRepository personRepository;
+    private final RoleRepository roleRepository;
 
     @Autowired
-    public PersonService(PersonRepository personRepository) {
+    public PersonService(PersonRepository personRepository, RoleRepository roleRepository) {
         this.personRepository = personRepository;
+        this.roleRepository = roleRepository;
     }
 
     @Transactional
@@ -54,5 +59,23 @@ public class PersonService {
             }
         }
         return resultSearch;
+    }
+
+    @Transactional
+    public void assignRoleToPerson(String personId, Role role) {
+        Person person = personRepository.findById(personId).orElse(null);
+        person.addRole(role);
+        personRepository.save(person);
+//        Person person = findById(personId)
+//                .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+//
+//        Role newRole = roleRepository.findByName("ROLE_" + roleName.toUpperCase())
+//                .orElseThrow(() -> new RuntimeException("Роль не найдена"));
+//
+//        Set<Role> roles = new HashSet<>();
+//        roles.add(newRole);
+//        person.setRoles(roles);
+//
+//        personRepository.save(person);
     }
 }

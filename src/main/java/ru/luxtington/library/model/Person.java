@@ -6,11 +6,13 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Document(collection = "person")
 public class Person {
@@ -34,18 +36,27 @@ public class Person {
     @Email(message = "Некорректное написание адреса электронной почты")
     private String email;
 
+    @NotEmpty(message = "Логин не может быть пустым")
+    private String username;
+
+    @NotEmpty(message = "Пароль не может быть пустым")
+    private String password;
+
     private List<Book> allBooks;
+
+    private Set<Role> roles = new HashSet<>();
 
     public Person() {
     }
 
-    public Person(String id, String surname, String name, String patronymic, int birthdayYear, String email) {
-        this.id = id;
+    public Person(String surname, String name, String patronymic, int birthdayYear, String email, String username, String password) {
         this.surname = surname;
         this.name = name;
         this.patronymic = patronymic;
         this.birthdayYear = birthdayYear;
         this.email = email;
+        this.username = username;
+        this.password = password;
     }
 
     public void addBook(@NotNull Book book){
@@ -128,6 +139,52 @@ public class Person {
             return new ArrayList<>();
         }
         return new ArrayList<>(allBooks);
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public void addRole(Role role){
+        this.roles.add(role);
+    }
+
+    public @NotEmpty(message = "Логин не может быть пустым") String getUsername() {
+        return username;
+    }
+
+    public void setUsername(@NotEmpty(message = "Логин не может быть пустым") String username) {
+        this.username = username;
+    }
+
+    public @NotEmpty(message = "Пароль не может быть пустым") String getPassword() {
+        return password;
+    }
+
+    public void setPassword(@NotEmpty(message = "Пароль не может быть пустым") String password) {
+        this.password = password;
+    }
+
+    public boolean isAdmin(){
+        StringBuilder res = new StringBuilder();
+        for (Role role : getRoles()){
+            res.append(role.getName());
+        }
+        System.out.println("ALL ROLES = " + res);
+        return res.toString().contains("ROLE_ADMIN");
+    }
+
+    public boolean isLibrarian(){
+        StringBuilder res = new StringBuilder();
+        for (Role role : getRoles()){
+            res.append(role.getName());
+        }
+        System.out.println("ALL ROLES = " + res);
+        return res.toString().contains("ROLE_LIBRARIAN");
     }
 
     @Override

@@ -6,10 +6,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.luxtington.library.model.Book;
 import ru.luxtington.library.model.Person;
+import ru.luxtington.library.model.Role;
 import ru.luxtington.library.service.PersonService;
-import ru.luxtington.library.utils.BookPartTitleHolder;
 import ru.luxtington.library.utils.PersonInitialsHolder;
 import ru.luxtington.library.utils.PersonValidator;
 
@@ -89,5 +88,12 @@ public class PersonController {
         model.addAttribute("textForPersonSearch", new PersonInitialsHolder());
 
         return "all_persons";
+    }
+
+    @PostMapping("/change-role/{id}")
+    public String changeRole(@PathVariable("id") String id) {
+        Role role = new Role("ROLE_LIBRARIAN");
+        personService.assignRoleToPerson(id, role);
+        return "redirect:/lib/persons/" + id;
     }
 }
