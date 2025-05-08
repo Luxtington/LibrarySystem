@@ -79,4 +79,8 @@ public class BookService {
         }
         return resultSearch;
     }
+
+    public Book findByNewestBook(){
+        return bookRepository.findTopByOrderByYearOfProduceDesc().get(0);
+    }
 }

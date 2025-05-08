@@ -10,4 +10,5 @@ import java.util.List;
 public interface PersonRepository extends MongoRepository<Person, String> {
     List<Person> findByEmail(String email);
     Person findByUsername(String username);
+    List<Person> findTopByOrderByBirthdayYearAsc();
 }

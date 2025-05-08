@@ -264,6 +264,7 @@
     </div>
 </div>
 <div class="total-quantity" th:if="${personQuantity > 0}" th:text="'Пользователей зарегистрировано: ' + ${personQuantity}"></div>
+<div class="total-quantity" th:if="${personQuantity > 0}" th:text="'Самый возрастной читатель: ' + ${oldestPerson.getSurname()}"></div>
 
 <div class="add-user" th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">
     <a href="/lib/persons/new" class="add-btn">

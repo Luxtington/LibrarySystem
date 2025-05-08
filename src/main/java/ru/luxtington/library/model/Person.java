@@ -174,7 +174,6 @@ public class Person {
         for (Role role : getRoles()){
             res.append(role.getName());
         }
-        System.out.println("ALL ROLES = " + res);
         return res.toString().contains("ROLE_ADMIN");
     }
 
@@ -183,7 +182,6 @@ public class Person {
         for (Role role : getRoles()){
             res.append(role.getName());
         }
-        System.out.println("ALL ROLES = " + res);
         return res.toString().contains("ROLE_LIBRARIAN");
     }
 
@@ -196,7 +194,10 @@ public class Person {
                 ", patronymic='" + patronymic + '\'' +
                 ", birthdayYear=" + birthdayYear +
                 ", email='" + email + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
                 ", allBooks=" + allBooks +
+                ", roles=" + roles +
                 '}';
     }
 }

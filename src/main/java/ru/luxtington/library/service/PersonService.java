@@ -9,10 +9,8 @@ import ru.luxtington.library.repository.PersonRepository;
 import ru.luxtington.library.repository.RoleRepository;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 @Transactional(readOnly = true)
@@ -66,16 +64,9 @@ public class PersonService {
         Person person = personRepository.findById(personId).orElse(null);
         person.addRole(role);
         personRepository.save(person);
-//        Person person = findById(personId)
-//                .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
-//
-//        Role newRole = roleRepository.findByName("ROLE_" + roleName.toUpperCase())
-//                .orElseThrow(() -> new RuntimeException("Роль не найдена"));
-//
-//        Set<Role> roles = new HashSet<>();
-//        roles.add(newRole);
-//        person.setRoles(roles);
-//
-//        personRepository.save(person);
+    }
+
+    public Person findByOldestAge(){
+        return personRepository.findTopByOrderByBirthdayYearAsc().getFirst();
     }
 }

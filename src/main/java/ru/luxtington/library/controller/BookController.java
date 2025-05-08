@@ -15,6 +15,7 @@ import ru.luxtington.library.service.PersonService;
 import ru.luxtington.library.utils.BookPartTitleHolder;
 import ru.luxtington.library.utils.BookValidator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -37,6 +38,7 @@ public class BookController {
         model.addAttribute("allBooks", bookService.findAll());
         model.addAttribute("booksQuantity", bookService.findAll().size());
         model.addAttribute("textForBookSearch", new BookPartTitleHolder());
+        model.addAttribute("newestBook", bookService.findByNewestBook());
         return "all_books";
     }
 
@@ -47,7 +49,12 @@ public class BookController {
 
         Person person = book.hasOwner() ? book.getOwner() : new Person();
         model.addAttribute("owner", person);
-        model.addAttribute("allPersons", personService.findAll());
+        List<Person> readers = new ArrayList<>();
+        for (Person p : personService.findAll()){
+            if (!p.isAdmin() && !p.isLibrarian())
+                readers.add(p);
+        }
+        model.addAttribute("allPersons", readers);
         return "concrete_book";
     }
 

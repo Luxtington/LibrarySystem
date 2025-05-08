@@ -32,6 +32,7 @@ public class PersonController {
         model.addAttribute("allPersons", personService.findAll());
         model.addAttribute("personQuantity", personService.findAll().size());
         model.addAttribute("textForPersonSearch", new PersonInitialsHolder());
+        model.addAttribute("oldestPerson", personService.findByOldestAge());
         return "all_persons";
     }
 
@@ -61,12 +62,17 @@ public class PersonController {
 
     @GetMapping("/update/{id}")
     public String updatePersonForm(@PathVariable("id") String id, Model model){
-        model.addAttribute("updatedPerson", personService.findById(id).orElse(null));
+        Person person = personService.findById(id).orElse(null);
+        model.addAttribute("updatedPerson", person);
         return "update_person";
     }
 
     @PatchMapping("/{id}")
     public String updatePerson(@PathVariable("id") String id, @ModelAttribute("updatedPerson") Person person){
+        Person copyPerson = personService.findById(id).orElse(null);
+        person.setRoles(copyPerson.getRoles());
+        person.setUsername(copyPerson.getUsername());
+        person.setPassword(copyPerson.getPassword());
         personService.save(id, person);
         return "redirect:/lib/persons";
     }

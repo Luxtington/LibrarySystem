@@ -154,7 +154,7 @@
         <div class="detail-value" th:text="${book.getYearOfProduce()}"></div>
     </div>
 
-    <div class="detail-row">
+    <div class="detail-row" th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'') or hasAuthority(''ROLE_LIBRARIAN'')')}">
         <div class="detail-label">Статус книги: </div>
         <div th:if="${!book.hasOwner()}">свободна. Кому назначить?
             <form th:method="POST" th:action="@{/lib/books/appoint/{id}(id = ${book.getId()})}">
@@ -175,6 +175,10 @@
             </form>
         </div>
     </div>
+</div>
+<div class="detail-row" th:unless="${#authorization.expression('hasAuthority(''ROLE_ADMIN'') or hasAuthority(''ROLE_LIBRARIAN'')')}">
+    <div th:if="${book.hasOwner()}">Занята читателем.</div>
+    <div th:unless="${book.hasOwner()}">На данный момент свободна.</div>
 </div>
 
 <a href="/lib/books" class="back-section">

@@ -236,6 +236,8 @@
     </div>
 </div>
 <div class="total-quantity" th:if="${booksQuantity > 0}" th:text="'Всего книг: ' + ${booksQuantity}"></div>
+<div class="total-quantity" th:if="${booksQuantity > 0}" th:text="'Самая новая книга: ' + ${newestBook.getTitle()}"></div>
+
 
 <div class="add-book" th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'') or hasAuthority(''ROLE_LIBRARIAN'')')}">
     <a href="/lib/books/new" class="add-btn">

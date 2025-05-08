@@ -54,6 +54,21 @@
             height: 120px;
             object-fit: contain;
         }
+        .logout-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
+        }
+        .logout-btn:hover {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 10px rgba(255, 0, 0, 0.7));
+        }
         @keyframes glow {
             from {
                 text-shadow: 0 0 10px rgba(32, 201, 151, 0.7),
@@ -89,6 +104,10 @@
 <body>
 
 <div class="stars" id="stars"></div>
+
+<div class="logout-btn">
+    <a href="/lib/auth/logout"><img src="/images/logout_icon.png" alt="Выйти"></a>
+</div>
 
 <div class="header">
     <h1>БИБЛИОТЕКА</h1>
